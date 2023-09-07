@@ -12,12 +12,12 @@ namespace FilmesApi.Controllers
         private static int id = 0;
 
         [HttpPost]
-        public void AdicionaFilme([FromBody] Filme filme)
+        public IActionResult AdicionaFilme([FromBody] Filme filme)
         {
             filme.Id = id++;
             filmes.Add(filme);
-            Console.WriteLine(filme.Titulo);
-            Console.WriteLine(filme.Duracao);
+            return CreatedAtAction(nameof(RecuperaFilmePorId), new { id = filme.Id }, filme);
+
         }
         [HttpGet]
         public IEnumerable<Filme> RecuperaFilmes([FromQuery] int skip = 0, [FromQuery] int take = 50)
@@ -26,9 +26,11 @@ namespace FilmesApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public Filme? RecuperaFilmePorId(int id) 
+        public IActionResult RecuperaFilmePorId(int id) 
         {
-            return filmes.FirstOrDefault(filme => filme.Id == id);
+            var filme = filmes.FirstOrDefault(filme => filme.Id == id);
+            if (filme == null) return NotFound();
+            return Ok(filme);
         }
     }
 }
