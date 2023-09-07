@@ -20,9 +20,9 @@ namespace FilmesApi.Controllers
             Console.WriteLine(filme.Duracao);
         }
         [HttpGet]
-        public IEnumerable<Filme> RecuperaFilmes()
+        public IEnumerable<Filme> RecuperaFilmes([FromQuery] int skip = 0, [FromQuery] int take = 50)
         {
-            return filmes;
+            return filmes.Skip(skip).Take(take);
         }
 
         [HttpGet("{id}")]
